@@ -35,8 +35,8 @@ header { display: flex; align-items: center; justify-content: space-between; gap
   padding: calc(10px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-left, 0px)) 10px max(16px, env(safe-area-inset-right, 0px));
   background: var(--sheet); border-bottom: 1px solid var(--line); }
 .brand { min-width: 0; }
-.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: .02em; margin: 0; text-wrap: balance; }
-.brand p { margin: 2px 0 0; font-size: .72rem; color: var(--muted); font-family: var(--font-data); letter-spacing: .04em; text-transform: uppercase; }
+.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(.95rem, 4.2vw, 1.1rem); line-height: 1.15; letter-spacing: .01em; margin: 0; }
+.brand p { margin: 3px 0 0; font-size: .72rem; color: var(--muted); font-family: var(--font-body); letter-spacing: .01em; }
 .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; flex: none; }
 .seg button { border: 0; background: transparent; color: var(--ink); font: 500 .8rem var(--font-body); min-height: 40px; padding: 6px 14px; border-radius: 999px; cursor: pointer;
   transition: background-color .18s ease, color .18s ease; }
@@ -47,12 +47,16 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .stage { position: relative; flex: 1; min-height: 0; background: var(--sky); touch-action: none; }
 canvas { display: block; width: 100%; height: 100%; }
 #labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.lbl { position: absolute; transform: translate(-50%, -50%); font: 500 .66rem var(--font-body); color: var(--ink);
-  background: color-mix(in srgb, var(--sheet) 82%, transparent); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
-.lbl.door { font-family: var(--font-data); color: var(--accent); background: color-mix(in srgb, var(--sheet) 68%, transparent); font-size: .62rem; padding: 1px 4px; }
+.lbl { position: absolute; transform: translate(-50%, -50%); max-width: 42vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font: 500 .66rem var(--font-body); color: var(--ink); background: color-mix(in srgb, var(--sheet) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--line) 60%, transparent); padding: 2px 7px; border-radius: 999px; }
+.lbl.door { font-family: var(--font-data); color: var(--accent); background: color-mix(in srgb, var(--sheet) 72%, transparent); font-size: .6rem; padding: 1px 5px; }
 .status { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); font: 500 .85rem var(--font-body);
   color: var(--muted); background: var(--sheet); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); }
-.hint { position: absolute; left: 16px; top: 10px; font: .68rem var(--font-data); color: var(--muted); }
+.hint { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); max-width: calc(100% - 32px); text-align: center;
+  font: 500 .76rem var(--font-body); color: var(--ink); background: color-mix(in srgb, var(--sheet) 92%, transparent);
+  border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px; box-shadow: 0 4px 18px rgb(0 0 0 / .14); transition: opacity .5s ease; }
+.hint.gone { opacity: 0; pointer-events: none; }
 .card { position: absolute; right: 12px; top: 10px; width: min(240px, calc(100% - 24px)); background: var(--sheet); border: 1px solid var(--line);
   border-radius: 10px; padding: 10px 12px; box-shadow: 0 6px 24px rgb(0 0 0 / .12); }
 .card h2 { margin: 0 0 4px; padding-right: 38px; font: 700 .95rem var(--font-display); }
@@ -61,21 +65,42 @@ canvas { display: block; width: 100%; height: 100%; }
 .card button { position: absolute; right: 2px; top: 2px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center;
   border: 0; background: none; color: var(--muted); font-size: 1.3rem; line-height: 1; cursor: pointer; border-radius: 8px; transition: background-color .18s ease, color .18s ease; }
 .card button:hover { color: var(--ink); background: var(--muted); }
-.tray { background: var(--sheet); border-top: 1px solid var(--line); padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 10px; }
-.views { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+/* bottom dock: viewpoints + a single Options button that expands a tidy panel */
+.dock { background: var(--sheet); border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px;
+  padding: 10px max(14px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-right, 0px)); }
+.views { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -4px; padding: 2px 4px; }
 .views::-webkit-scrollbar { display: none; }
-.chip { flex: none; display: inline-flex; align-items: center; min-height: 44px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 999px; padding: 7px 14px;
-  font: 500 .78rem var(--font-body); cursor: pointer; transition: border-color .18s ease, color .18s ease, background-color .18s ease; }
+.chip { flex: none; display: inline-flex; align-items: center; min-height: 44px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 999px; padding: 7px 15px;
+  font: 500 .8rem var(--font-body); white-space: nowrap; cursor: pointer; transition: border-color .18s ease, color .18s ease, background-color .18s ease; }
 .chip:hover { border-color: var(--muted); }
-.chip:active { background: color-mix(in srgb, var(--accent) 10%, var(--paper)); }
-.chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--paper)); }
-.row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: .78rem; }
-.row label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
-.row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
-.cut { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 180px; }
-.cut input { flex: 1; accent-color: var(--accent); }
-.cut output { font-family: var(--font-data); min-width: 5.5em; text-align: right; font-variant-numeric: tabular-nums; }
-.facts { font: .7rem var(--font-data); color: var(--muted); letter-spacing: .02em; }
+.chip:active { background: color-mix(in srgb, var(--accent) 12%, var(--paper)); }
+.chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--paper)); font-weight: 600; }
+.dockbar { display: flex; gap: 8px; }
+.dockbtn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border: 1px solid var(--line);
+  background: var(--paper); color: var(--ink); border-radius: 12px; font: 600 .85rem var(--font-body); cursor: pointer; transition: background-color .18s ease, border-color .18s ease, color .18s ease; }
+.dockbtn:active { background: color-mix(in srgb, var(--accent) 10%, var(--paper)); }
+.dockbtn[aria-expanded="true"] { border-color: var(--accent); color: var(--accent); }
+.dockbtn .chev { font-size: .66rem; transition: transform .2s ease; }
+.dockbtn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.panel { display: flex; flex-direction: column; gap: 12px; padding: 2px 2px 0; }
+.cut { display: flex; align-items: center; gap: 12px; }
+.cut .lab { font: 600 .8rem var(--font-body); color: var(--muted); white-space: nowrap; }
+.cut input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); }
+.cut output { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: .85rem; min-width: 4.2em; text-align: right; color: var(--ink); }
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pill { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; border: 1px solid var(--line);
+  background: var(--paper); color: var(--ink); border-radius: 10px; font: 500 .82rem var(--font-body); cursor: pointer; transition: background-color .18s ease, border-color .18s ease, color .18s ease; }
+.pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: background-color .18s ease; }
+.pill:active { background: color-mix(in srgb, var(--accent) 8%, var(--paper)); }
+.pill[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--paper)); }
+.pill[aria-pressed="true"] .dot { background: var(--accent); }
+.facts { margin: 0; font: .72rem var(--font-body); color: var(--muted); }
+@media (min-width: 641px) {
+  .opts-btn { display: none; }
+  #panel[hidden] { display: flex !important; }
+  .toggles { grid-template-columns: repeat(4, auto); justify-content: start; }
+  .pill { padding: 0 16px; }
+}
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 /* larger, easier-to-grab range thumb for touch */
 .cut input[type="range"] { height: 44px; cursor: pointer; }
@@ -111,20 +136,25 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     </div>
   </div>
 
-  <div class="tray">
-    <div class="views" id="views" role="group" aria-label="Viewpoints"></div>
-    <div class="row">
+  <div class="dock">
+    <div class="panel" id="panel" hidden>
       <div class="cut">
-        <span>Cut height</span>
+        <span class="lab">Cut&nbsp;height</span>
         <input type="range" id="cutH" min="1.0" max="12.5" step="0.25" value="11.5" aria-label="Cut height in feet above floor">
         <output id="cutOut" for="cutH">11'-6"</output>
       </div>
-      <label><input type="checkbox" id="tLabels" checked> Room names</label>
-      <label><input type="checkbox" id="tDoors"> Door tags</label>
-      <label><input type="checkbox" id="tFurn" checked> Furniture</label>
-      <button class="chip" id="gateBtn" aria-pressed="false">Open car gate</button>
+      <div class="toggles">
+        <button class="pill" id="pLabels" aria-pressed="false"><span class="dot" aria-hidden="true"></span>Room names</button>
+        <button class="pill" id="pDoors" aria-pressed="false"><span class="dot" aria-hidden="true"></span>Door tags</button>
+        <button class="pill" id="pFurn" aria-pressed="true"><span class="dot" aria-hidden="true"></span>Furniture</button>
+        <button class="pill" id="gateBtn" aria-pressed="false"><span class="dot" aria-hidden="true"></span>Car gate</button>
+      </div>
+      <p class="facts" id="facts"></p>
     </div>
-    <div class="facts" id="facts"></div>
+    <div class="views" id="views" role="group" aria-label="Viewpoints"></div>
+    <div class="dockbar">
+      <button class="dockbtn opts-btn" id="optsBtn" aria-expanded="false" aria-controls="panel">Options <span class="chev" aria-hidden="true">&#9662;</span></button>
+    </div>
   </div>
 </div>
 
@@ -295,7 +325,7 @@ const GATE_RUN = (11.25 + 0.6) * FT;
 const gateBtn = document.getElementById('gateBtn');
 function setGate(open, instant) {
   gateOpen = open;
-  gateBtn.setAttribute('aria-pressed', open); gateBtn.textContent = open ? 'Close car gate' : 'Open car gate';
+  gateBtn.setAttribute('aria-pressed', open);
   if (!gate) return;
   const from = gate.position.x, to = gate.userData.x0 + (open ? GATE_RUN : 0);
   if (instant || matchMedia('(prefers-reduced-motion: reduce)').matches) { gate.position.x = to; gateAnim = null; redraw(true); return; }
@@ -366,7 +396,7 @@ function placeLabels() {
   labels.forEach(l => {
     if (l.el.hidden) return;
     v3.copy(l.p).project(camera);
-    const on = v3.z < 1 && Math.abs(v3.x) < 1.1 && Math.abs(v3.y) < 1.1;
+    const on = v3.z < 1 && Math.abs(v3.x) < 0.97 && Math.abs(v3.y) < 0.97;
     l.el.style.visibility = on ? 'visible' : 'hidden';
     if (on) l.el.style.transform = `translate(${(v3.x + 1) / 2 * w}px, ${(1 - v3.y) / 2 * h}px) translate(-50%,-50%)`;
     l.el.style.left = '0'; l.el.style.top = '0';
@@ -374,20 +404,44 @@ function placeLabels() {
 }
 
 // --- toggles & cut
-const tL = document.getElementById('tLabels'), tD = document.getElementById('tDoors'), tF = document.getElementById('tFurn');
+const pLabels = document.getElementById('pLabels'), pDoors = document.getElementById('pDoors'), pFurn = document.getElementById('pFurn');
 const cutH = document.getElementById('cutH'), cutOut = document.getElementById('cutOut');
+// room names clutter a small screen, so default them off on phones (tap a room to identify it)
+const state = { labels: matchMedia('(min-width: 641px)').matches, doors: false, furn: true };
+function syncPills() {
+  pLabels.setAttribute('aria-pressed', state.labels);
+  pDoors.setAttribute('aria-pressed', state.doors);
+  pFurn.setAttribute('aria-pressed', state.furn);
+}
 function fmt(ft) { const t = Math.round(ft * 12); return `${Math.floor(t / 12)}'-${t % 12}"`; }
 function applyToggles() {
-  labels.forEach(l => l.el.hidden = l.kind === 'room' ? !tL.checked : !tD.checked); redraw(false);
-  if (model) model.traverse(o => { if ((o.isMesh || o.isLineSegments) && o.userData.furn) o.visible = tF.checked; });
+  labels.forEach(l => l.el.hidden = l.kind === 'room' ? !state.labels : !state.doors); redraw(false);
+  if (model) model.traverse(o => { if ((o.isMesh || o.isLineSegments) && o.userData.furn) o.visible = state.furn; });
   const hft = parseFloat(cutH.value);
   clip.constant = (INFO[version].ffl) + hft * FT;
   cutOut.value = fmt(hft);
   if (hft >= 12.5) clip.constant = 100;
   redraw(true);
 }
-[tL, tD, tF].forEach(x => x.addEventListener('change', applyToggles));
+pLabels.onclick = () => { state.labels = !state.labels; syncPills(); applyToggles(); };
+pDoors.onclick  = () => { state.doors  = !state.doors;  syncPills(); applyToggles(); };
+pFurn.onclick   = () => { state.furn   = !state.furn;   syncPills(); applyToggles(); };
 cutH.addEventListener('input', applyToggles);
+syncPills();
+
+// Options panel expander (collapsed by default on phones; always shown >=641px via CSS)
+const optsBtn = document.getElementById('optsBtn'), panel = document.getElementById('panel');
+optsBtn.addEventListener('click', () => {
+  const opening = panel.hasAttribute('hidden');
+  if (opening) panel.removeAttribute('hidden'); else panel.setAttribute('hidden', '');
+  optsBtn.setAttribute('aria-expanded', opening);
+  resize();   // 3D canvas re-fits as the dock grows/shrinks
+});
+
+// one-time hint toast: fades after a few seconds or on first interaction
+const hintEl = document.getElementById('hint');
+let hintTimer = setTimeout(() => hintEl.classList.add('gone'), 5000);
+stage.addEventListener('pointerdown', () => { hintEl.classList.add('gone'); clearTimeout(hintTimer); }, { once: true });
 
 // --- tap a room
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
