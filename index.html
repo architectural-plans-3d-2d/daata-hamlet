@@ -391,7 +391,7 @@ function load(v) {
   };
   if (cache[v]) return done(cache[v]);
   loader.load(`DH-${v}.glb`, g => { cache[v] = g; done(g); },
-    e => { if (e.total) st.textContent = `Loading model… ${Math.round(e.loaded / e.total * 100)}%`; },
+    e => { if (e.total) st.textContent = `Loading model… ${Math.min(99, Math.round(e.loaded / e.total * 100))}%`; },
     () => { st.textContent = 'The 3D model could not load. Check that DH-' + v + '.glb sits next to this page.'; });
 }
 
