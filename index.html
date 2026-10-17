@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
 <style>*{box-sizing:border-box}body{margin:0}[hidden]{display:none!important}</style>
 <title>Daata Hamlet 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +76,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   <header>
     <div class="brand">
       <h1>Daata Hamlet Residence</h1>
-      <p>Ground floor · REV-04</p>
+      <p>Ground + second floor · GF REV-04 · SF REV-01</p>
     </div>
     <div class="seg" role="group" aria-label="Stair option">
       <button id="optL" aria-pressed="true">L stair</button>
@@ -96,6 +97,13 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   </div>
 
   <div class="tray">
+    <div class="row">
+      <div class="seg" id="floorSeg" role="group" aria-label="Floor">
+        <button data-f="G" aria-pressed="false">Ground</button>
+        <button data-f="S" aria-pressed="false">Second</button>
+        <button data-f="A" aria-pressed="true">Whole house</button>
+      </div>
+    </div>
     <div class="views" id="views" role="group" aria-label="Viewpoints"></div>
     <div class="row">
       <div class="cut">
@@ -117,9 +125,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/environments/RoomEnvironment.js"></script>
 <script>
-const INFO = {"L": {"version": "L", "stair": "L-type stair (option 1)", "landing": "7'-6 1/2\"", "risers": 19, "riser": 6.95, "rooms": [{"key": "BED2", "name": "Bed Room-2", "size": "13'-9\" x 16'-0\"", "area": 220.0, "pos": [-4.953, 0.213, 5.563]}, {"key": "BATH2", "name": "Bath (Bed-2)", "size": "5'-3\" x 7'-0\"", "area": 36.8, "pos": [-1.829, 0.213, 6.934]}, {"key": "DRS2", "name": "Dress (Bed-2)", "size": "5'-3\" x 8'-7 1/2\"", "area": 45.3, "pos": [-1.829, 0.213, 4.439]}, {"key": "PASS", "name": "Passage 4'-0\" Wide", "size": "14'-6\" x 4'-0\"", "area": 58.0, "pos": [-4.839, 0.213, 2.286]}, {"key": "KIT", "name": "Kitchen", "size": "13'-9\" x 8'-1 1/2\"", "area": 111.7, "pos": [-4.953, 0.213, 0.324]}, {"key": "DKIT", "name": "Dirty Kitchen", "size": "13'-5\" x 7'-6 1/2\"", "area": 53.0, "pos": [-3.548, 0.213, -2.608]}, {"key": "LNG", "name": "Family Lounge + Dining", "size": "17'-3\" x 25'-7 1/2\"", "area": 363.9, "pos": [0.0, 0.213, 0.368]}, {"key": "OTS", "name": "OTS (Open To Sky)", "size": "irregular", "area": 58.4, "pos": [0.0, 0.213, -4.308]}, {"key": "LOBBY", "name": "Guest Lobby", "size": "4'-10 1/2\" x 3'-6\"", "area": 17.1, "pos": [3.6, 0.213, 2.362]}, {"key": "STORE", "name": "Guest Store", "size": "4'-10 1/2\" x 3'-4 1/2\"", "area": 16.5, "pos": [3.6, 0.213, 1.086]}, {"key": "BATHD", "name": "Guest Washroom", "size": "9'-9\" x 7'-7 1/2\"", "area": 74.3, "pos": [5.944, 0.213, 1.734]}, {"key": "DRAW", "name": "Drawing Room", "size": "15'-0\" x 16'-0\"", "area": 240.0, "pos": [5.144, 0.213, 5.563]}, {"key": "BED1", "name": "Bed-1", "size": "15'-0\" x 15'-0\"", "area": 225.0, "pos": [5.144, 0.213, -1.943]}, {"key": "DRS1", "name": "Dressing (Bed-1)", "size": "7'-1 1/2\" x 9'-2 1/2\"", "area": 55.4, "pos": [3.943, 0.213, -5.307]}, {"key": "WR1", "name": "Washroom (Bed-1)", "size": "7'-6\" x 12'-5\"", "area": 81.7, "pos": [6.287, 0.213, -5.772]}, {"key": "PORCH", "name": "Car Porch", "size": "11'-3\" x 19'-9\"", "area": 222.2, "pos": [0.914, 0.213, 6.134]}], "doors": [{"id": "D1", "w": "6'-0\"", "kind": "swing", "pos": [0.457, 2.469, 3.01]}, {"id": "D2", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, 3.01]}, {"id": "D4", "w": "2'-6\"", "kind": "pocket", "pos": [-2.743, 2.469, 5.182]}, {"id": "D3", "w": "2'-0\"", "kind": "swing", "pos": [-2.286, 2.469, 5.81]}, {"id": "D5", "w": "3'-6\"", "kind": "swing", "pos": [-7.163, 2.469, 2.286]}, {"id": "D6", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, 1.619]}, {"id": "D7", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, -0.972]}, {"id": "D8", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 2.469, 2.362]}, {"id": "D9", "w": "3'-6\"", "kind": "pocket", "pos": [2.743, 2.469, 3.658]}, {"id": "D10", "w": "3'-6\"", "kind": "pocket", "pos": [3.543, 2.469, 3.01]}, {"id": "D11", "w": "2'-0\"", "kind": "swing", "pos": [4.401, 2.469, 2.515]}, {"id": "D12", "w": "2'-6\"", "kind": "pocket", "pos": [3.962, 2.469, 1.715]}, {"id": "D13", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 2.469, -3.581]}, {"id": "D14", "w": "2'-6\"", "kind": "slide", "pos": [3.315, 2.469, -4.286]}, {"id": "D15", "w": "2'-0\"", "kind": "swing", "pos": [5.086, 2.469, -5.639]}], "views": {"Aerial": {"eye": [0.914, 16.916, 16.764], "look": [0.61, 0.0, 0.61]}, "Lounge \u2192 entrance": {"eye": [0.61, 1.768, -1.981], "look": [1.067, 1.372, 3.048]}, "Foyer \u2192 lobby": {"eye": [-0.305, 1.676, 2.316], "look": [4.572, 1.433, 2.438]}, "Stair side": {"eye": [-1.981, 1.615, 0.762], "look": [2.438, 1.829, 1.372]}, "Porch": {"eye": [0.914, 3.962, 11.887], "look": [0.914, 0.762, 3.048]}, "From the road": {"eye": [-5.486, 2.134, 21.336], "look": [0.61, 0.305, 7.315]}}, "ffl": 0.152}, "U": {"version": "U", "stair": "Compact U-stair (option 2)", "landing": "7'-6 1/2\"", "risers": 19, "riser": 6.95, "rooms": [{"key": "BED2", "name": "Bed Room-2", "size": "13'-9\" x 16'-0\"", "area": 220.0, "pos": [-4.953, 0.213, 5.563]}, {"key": "BATH2", "name": "Bath (Bed-2)", "size": "5'-3\" x 7'-0\"", "area": 36.8, "pos": [-1.829, 0.213, 6.934]}, {"key": "DRS2", "name": "Dress (Bed-2)", "size": "5'-3\" x 8'-7 1/2\"", "area": 45.3, "pos": [-1.829, 0.213, 4.439]}, {"key": "PASS", "name": "Passage 4'-0\" Wide", "size": "14'-6\" x 4'-0\"", "area": 58.0, "pos": [-4.839, 0.213, 2.286]}, {"key": "KIT", "name": "Kitchen", "size": "13'-9\" x 8'-1 1/2\"", "area": 111.7, "pos": [-4.953, 0.213, 0.324]}, {"key": "DKIT", "name": "Dirty Kitchen", "size": "13'-5\" x 7'-6 1/2\"", "area": 53.0, "pos": [-3.548, 0.213, -2.608]}, {"key": "LNG", "name": "Family Lounge + Dining", "size": "17'-3\" x 25'-7 1/2\"", "area": 363.9, "pos": [0.0, 0.213, 0.368]}, {"key": "OTS", "name": "OTS (Open To Sky)", "size": "irregular", "area": 58.4, "pos": [0.0, 0.213, -4.308]}, {"key": "LOBBY", "name": "Guest Lobby", "size": "4'-10 1/2\" x 3'-6\"", "area": 17.1, "pos": [3.6, 0.213, 2.362]}, {"key": "STORE", "name": "Guest Store", "size": "4'-10 1/2\" x 3'-4 1/2\"", "area": 16.5, "pos": [3.6, 0.213, 1.086]}, {"key": "BATHD", "name": "Guest Washroom", "size": "9'-9\" x 7'-7 1/2\"", "area": 74.3, "pos": [5.944, 0.213, 1.734]}, {"key": "DRAW", "name": "Drawing Room", "size": "15'-0\" x 16'-0\"", "area": 240.0, "pos": [5.144, 0.213, 5.563]}, {"key": "BED1", "name": "Bed-1", "size": "15'-0\" x 15'-0\"", "area": 225.0, "pos": [5.144, 0.213, -1.943]}, {"key": "DRS1", "name": "Dressing (Bed-1)", "size": "7'-1 1/2\" x 9'-2 1/2\"", "area": 55.4, "pos": [3.943, 0.213, -5.307]}, {"key": "WR1", "name": "Washroom (Bed-1)", "size": "7'-6\" x 12'-5\"", "area": 81.7, "pos": [6.287, 0.213, -5.772]}, {"key": "PORCH", "name": "Car Porch", "size": "11'-3\" x 19'-9\"", "area": 222.2, "pos": [0.914, 0.213, 6.134]}], "doors": [{"id": "D1", "w": "6'-0\"", "kind": "swing", "pos": [0.457, 2.469, 3.01]}, {"id": "D2", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, 3.01]}, {"id": "D4", "w": "2'-6\"", "kind": "pocket", "pos": [-2.743, 2.469, 5.182]}, {"id": "D3", "w": "2'-0\"", "kind": "swing", "pos": [-2.286, 2.469, 5.81]}, {"id": "D5", "w": "3'-6\"", "kind": "swing", "pos": [-7.163, 2.469, 2.286]}, {"id": "D6", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, 1.619]}, {"id": "D7", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, -0.972]}, {"id": "D8", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 2.469, 2.362]}, {"id": "D9", "w": "3'-6\"", "kind": "pocket", "pos": [2.743, 2.469, 3.658]}, {"id": "D10", "w": "3'-6\"", "kind": "pocket", "pos": [3.543, 2.469, 3.01]}, {"id": "D11", "w": "2'-0\"", "kind": "swing", "pos": [4.401, 2.469, 2.515]}, {"id": "D12", "w": "2'-6\"", "kind": "pocket", "pos": [3.962, 2.469, 1.715]}, {"id": "D13", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 2.469, -3.581]}, {"id": "D14", "w": "2'-6\"", "kind": "slide", "pos": [3.315, 2.469, -4.286]}, {"id": "D15", "w": "2'-0\"", "kind": "swing", "pos": [5.086, 2.469, -5.639]}], "views": {"Aerial": {"eye": [0.914, 16.916, 16.764], "look": [0.61, 0.0, 0.61]}, "Lounge \u2192 entrance": {"eye": [0.61, 1.768, -1.981], "look": [1.067, 1.372, 3.048]}, "Foyer \u2192 lobby": {"eye": [-0.305, 1.676, 2.316], "look": [4.572, 1.433, 2.438]}, "Stair side": {"eye": [-1.981, 1.615, 0.762], "look": [2.438, 1.829, 1.372]}, "Porch": {"eye": [0.914, 3.962, 11.887], "look": [0.914, 0.762, 3.048]}, "From the road": {"eye": [-5.486, 2.134, 21.336], "look": [0.61, 0.305, 7.315]}}, "ffl": 0.152}};
+const INFO = {"L": {"version": "L", "stair": "L-type stair (option 1)", "landing": "7'-6 1/2\"", "risers": 19, "riser": 6.95, "rooms": [{"key": "BED2", "name": "Bed Room-2", "size": "13'-9\" x 16'-0\"", "area": 220.0, "pos": [-4.953, 0.213, 5.563], "floor": "G"}, {"key": "BATH2", "name": "Bath (Bed-2)", "size": "5'-3\" x 7'-0\"", "area": 36.8, "pos": [-1.829, 0.213, 6.934], "floor": "G"}, {"key": "DRS2", "name": "Dress (Bed-2)", "size": "5'-3\" x 8'-7 1/2\"", "area": 45.3, "pos": [-1.829, 0.213, 4.439], "floor": "G"}, {"key": "PASS", "name": "Passage 4'-0\" Wide", "size": "14'-6\" x 4'-0\"", "area": 58.0, "pos": [-4.839, 0.213, 2.286], "floor": "G"}, {"key": "KIT", "name": "Kitchen", "size": "13'-9\" x 8'-1 1/2\"", "area": 111.7, "pos": [-4.953, 0.213, 0.324], "floor": "G"}, {"key": "DKIT", "name": "Dirty Kitchen", "size": "13'-5\" x 7'-6 1/2\"", "area": 53.0, "pos": [-3.548, 0.213, -2.608], "floor": "G"}, {"key": "LNG", "name": "Family Lounge + Dining", "size": "17'-3\" x 25'-7 1/2\"", "area": 363.9, "pos": [0.0, 0.213, 0.368], "floor": "G"}, {"key": "OTS", "name": "OTS (Open To Sky)", "size": "irregular", "area": 58.4, "pos": [0.0, 0.213, -4.308], "floor": "G"}, {"key": "LOBBY", "name": "Guest Lobby", "size": "4'-10 1/2\" x 3'-6\"", "area": 17.1, "pos": [3.6, 0.213, 2.362], "floor": "G"}, {"key": "STORE", "name": "Guest Store", "size": "4'-10 1/2\" x 3'-4 1/2\"", "area": 16.5, "pos": [3.6, 0.213, 1.086], "floor": "G"}, {"key": "BATHD", "name": "Guest Washroom", "size": "9'-9\" x 7'-7 1/2\"", "area": 74.3, "pos": [5.944, 0.213, 1.734], "floor": "G"}, {"key": "DRAW", "name": "Drawing Room", "size": "15'-0\" x 16'-0\"", "area": 240.0, "pos": [5.144, 0.213, 5.563], "floor": "G"}, {"key": "BED1", "name": "Bed-1", "size": "15'-0\" x 15'-0\"", "area": 225.0, "pos": [5.144, 0.213, -1.943], "floor": "G"}, {"key": "DRS1", "name": "Dressing (Bed-1)", "size": "7'-1 1/2\" x 9'-2 1/2\"", "area": 55.4, "pos": [3.943, 0.213, -5.307], "floor": "G"}, {"key": "WR1", "name": "Washroom (Bed-1)", "size": "7'-6\" x 12'-5\"", "area": 81.7, "pos": [6.287, 0.213, -5.772], "floor": "G"}, {"key": "PORCH", "name": "Car Porch", "size": "11'-3\" x 19'-9\"", "area": 222.2, "pos": [0.914, 0.213, 6.134], "floor": "G"}, {"key": "SF_BED4", "name": "Bed Room-4", "size": "13'-9\" x 16'-0\"", "area": 220.0, "pos": [-4.953, 3.566, 5.563], "floor": "S"}, {"key": "SF_BATH4", "name": "Bath (Bed-4)", "size": "5'-3\" x 7'-0\"", "area": 36.8, "pos": [-1.829, 3.566, 6.934], "floor": "S"}, {"key": "SF_DRS4", "name": "Dress (Bed-4)", "size": "5'-3\" x 8'-7 1/2\"", "area": 45.3, "pos": [-1.829, 3.566, 4.439], "floor": "S"}, {"key": "SF_FPASS", "name": "Passage 4'-0\" Wide", "size": "14'-6\" x 4'-0\"", "area": 58.0, "pos": [-4.839, 3.566, 2.286], "floor": "S"}, {"key": "SF_FKIT", "name": "Kitchen (Upper)", "size": "13'-9\" x 8'-1 1/2\"", "area": 111.7, "pos": [-4.953, 3.566, 0.324], "floor": "S"}, {"key": "SF_LAUN", "name": "Laundry + Store", "size": "13'-5\" x 7'-6 1/2\"", "area": 53.0, "pos": [-4.262, 3.566, -1.809], "floor": "S"}, {"key": "SF_HALL", "name": "Upper Lounge + Dining", "size": "irregular", "area": 302.1, "pos": [-0.147, 3.566, -0.689], "floor": "S"}, {"key": "SF_OTS", "name": "OTS (Open To Sky)", "size": "irregular", "area": 58.4, "pos": [-0.001, 3.566, -4.308], "floor": "S"}, {"key": "SF_BAL", "name": "Balcony", "size": "11'-3\" x 3'-9\"", "area": 42.2, "pos": [0.914, 3.566, 7.429], "floor": "S"}, {"key": "SF_FTV", "name": "Family TV Lounge", "size": "11'-3\" x 11'-10 1/2\"", "area": 133.6, "pos": [0.914, 3.566, 4.934], "floor": "S"}, {"key": "SF_MBR", "name": "Master Bedroom", "size": "15'-0\" x 16'-0\"", "area": 240.0, "pos": [5.144, 3.566, 5.563], "floor": "S"}, {"key": "SF_MDRS", "name": "Dressing (Master)", "size": "4'-10 1/2\" x 7'-7 1/2\"", "area": 37.2, "pos": [3.6, 3.566, 1.734], "floor": "S"}, {"key": "SF_MBATH", "name": "Bath (Master)", "size": "9'-9\" x 7'-7 1/2\"", "area": 74.3, "pos": [5.944, 3.566, 1.734], "floor": "S"}, {"key": "SF_BED3", "name": "Bed Room-3", "size": "15'-0\" x 15'-0\"", "area": 225.0, "pos": [5.144, 3.566, -1.943], "floor": "S"}, {"key": "SF_DRS3", "name": "Dressing (Bed-3)", "size": "7'-1 1/2\" x 9'-2 1/2\"", "area": 55.4, "pos": [4.011, 3.566, -5.541], "floor": "S"}, {"key": "SF_WR3", "name": "Washroom (Bed-3)", "size": "7'-6\" x 12'-5\"", "area": 81.7, "pos": [6.34, 3.566, -6.015], "floor": "S"}], "doors": [{"id": "D1", "w": "6'-0\"", "kind": "swing", "pos": [0.457, 2.469, 3.01], "floor": "G"}, {"id": "D2", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, 3.01], "floor": "G"}, {"id": "D4", "w": "2'-6\"", "kind": "pocket", "pos": [-2.743, 2.469, 5.182], "floor": "G"}, {"id": "D3", "w": "2'-0\"", "kind": "swing", "pos": [-2.286, 2.469, 5.81], "floor": "G"}, {"id": "D5", "w": "3'-6\"", "kind": "swing", "pos": [-7.163, 2.469, 2.286], "floor": "G"}, {"id": "D6", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, 1.619], "floor": "G"}, {"id": "D7", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, -0.972], "floor": "G"}, {"id": "D8", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 2.469, 2.362], "floor": "G"}, {"id": "D9", "w": "3'-6\"", "kind": "pocket", "pos": [2.743, 2.469, 3.658], "floor": "G"}, {"id": "D10", "w": "3'-6\"", "kind": "pocket", "pos": [3.543, 2.469, 3.01], "floor": "G"}, {"id": "D11", "w": "2'-0\"", "kind": "swing", "pos": [4.401, 2.469, 2.515], "floor": "G"}, {"id": "D12", "w": "2'-6\"", "kind": "pocket", "pos": [3.962, 2.469, 1.715], "floor": "G"}, {"id": "D13", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 2.469, -3.581], "floor": "G"}, {"id": "D14", "w": "2'-6\"", "kind": "slide", "pos": [3.315, 2.469, -4.286], "floor": "G"}, {"id": "D15", "w": "2'-0\"", "kind": "swing", "pos": [5.086, 2.469, -5.639], "floor": "G"}, {"id": "D16", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 5.822, 3.01], "floor": "S"}, {"id": "D17", "w": "2'-6\"", "kind": "pocket", "pos": [-2.743, 5.822, 5.182], "floor": "S"}, {"id": "D18", "w": "2'-0\"", "kind": "swing", "pos": [-2.286, 5.822, 5.81], "floor": "S"}, {"id": "D19", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 5.822, 1.619], "floor": "S"}, {"id": "D20", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 5.822, -0.972], "floor": "S"}, {"id": "A1", "w": "3'-0\"", "kind": "arch", "pos": [-0.229, 5.822, 3.01], "floor": "S"}, {"id": "D21", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 5.822, 3.696], "floor": "S"}, {"id": "D22", "w": "2'-6\"", "kind": "pocket", "pos": [3.391, 5.822, 3.01], "floor": "S"}, {"id": "D23", "w": "2'-0\"", "kind": "swing", "pos": [4.401, 5.822, 2.515], "floor": "S"}, {"id": "D24", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 5.822, -3.581], "floor": "S"}, {"id": "D25", "w": "2'-6\"", "kind": "slide", "pos": [3.315, 5.822, -4.286], "floor": "S"}, {"id": "D26", "w": "2'-0\"", "kind": "swing", "pos": [5.086, 5.822, -5.639], "floor": "S"}], "views": {"Whole house": {"eye": [-14.021, 15.85, 19.507], "look": [0.0, 3.658, 0.61], "floor": "A"}, "Street view": {"eye": [-10.363, 1.676, 21.336], "look": [0.61, 4.572, 3.658], "floor": "A"}, "Ground floor": {"eye": [0.914, 16.916, 16.764], "look": [0.61, 0.0, 0.61], "floor": "G"}, "Lounge \u2192 entrance": {"eye": [0.61, 1.768, -1.981], "look": [1.067, 1.372, 3.048], "floor": "G"}, "Foyer \u2192 lobby": {"eye": [-0.305, 1.676, 2.316], "look": [4.572, 1.433, 2.438], "floor": "G"}, "Stair side": {"eye": [-1.981, 1.615, 0.762], "look": [2.438, 1.829, 1.372], "floor": "G"}, "Porch": {"eye": [0.914, 3.962, 11.887], "look": [0.914, 0.762, 3.048], "floor": "G"}, "From the road": {"eye": [-5.486, 2.134, 21.336], "look": [0.61, 0.305, 7.315], "floor": "G"}, "Second floor": {"eye": [0.914, 18.898, 15.85], "look": [0.61, 3.505, 0.61], "floor": "S"}, "Upper lounge": {"eye": [-2.286, 5.09, 2.591], "look": [2.134, 4.572, -0.914], "floor": "S"}, "TV lounge \u2192 balcony": {"eye": [0.914, 5.09, 3.292], "look": [0.914, 4.602, 8.534], "floor": "S"}, "Master bedroom": {"eye": [7.132, 5.151, 3.475], "look": [3.505, 4.298, 7.315], "floor": "S"}}, "ffl": 0.152, "ffl_s": 3.5052, "floors": {"G": "Ground floor", "S": "Second floor", "A": "Whole house"}}, "U": {"version": "U", "stair": "Compact U-stair (option 2)", "landing": "7'-6 1/2\"", "risers": 19, "riser": 6.95, "rooms": [{"key": "BED2", "name": "Bed Room-2", "size": "13'-9\" x 16'-0\"", "area": 220.0, "pos": [-4.953, 0.213, 5.563], "floor": "G"}, {"key": "BATH2", "name": "Bath (Bed-2)", "size": "5'-3\" x 7'-0\"", "area": 36.8, "pos": [-1.829, 0.213, 6.934], "floor": "G"}, {"key": "DRS2", "name": "Dress (Bed-2)", "size": "5'-3\" x 8'-7 1/2\"", "area": 45.3, "pos": [-1.829, 0.213, 4.439], "floor": "G"}, {"key": "PASS", "name": "Passage 4'-0\" Wide", "size": "14'-6\" x 4'-0\"", "area": 58.0, "pos": [-4.839, 0.213, 2.286], "floor": "G"}, {"key": "KIT", "name": "Kitchen", "size": "13'-9\" x 8'-1 1/2\"", "area": 111.7, "pos": [-4.953, 0.213, 0.324], "floor": "G"}, {"key": "DKIT", "name": "Dirty Kitchen", "size": "13'-5\" x 7'-6 1/2\"", "area": 53.0, "pos": [-3.548, 0.213, -2.608], "floor": "G"}, {"key": "LNG", "name": "Family Lounge + Dining", "size": "17'-3\" x 25'-7 1/2\"", "area": 363.9, "pos": [0.0, 0.213, 0.368], "floor": "G"}, {"key": "OTS", "name": "OTS (Open To Sky)", "size": "irregular", "area": 58.4, "pos": [0.0, 0.213, -4.308], "floor": "G"}, {"key": "LOBBY", "name": "Guest Lobby", "size": "4'-10 1/2\" x 3'-6\"", "area": 17.1, "pos": [3.6, 0.213, 2.362], "floor": "G"}, {"key": "STORE", "name": "Guest Store", "size": "4'-10 1/2\" x 3'-4 1/2\"", "area": 16.5, "pos": [3.6, 0.213, 1.086], "floor": "G"}, {"key": "BATHD", "name": "Guest Washroom", "size": "9'-9\" x 7'-7 1/2\"", "area": 74.3, "pos": [5.944, 0.213, 1.734], "floor": "G"}, {"key": "DRAW", "name": "Drawing Room", "size": "15'-0\" x 16'-0\"", "area": 240.0, "pos": [5.144, 0.213, 5.563], "floor": "G"}, {"key": "BED1", "name": "Bed-1", "size": "15'-0\" x 15'-0\"", "area": 225.0, "pos": [5.144, 0.213, -1.943], "floor": "G"}, {"key": "DRS1", "name": "Dressing (Bed-1)", "size": "7'-1 1/2\" x 9'-2 1/2\"", "area": 55.4, "pos": [3.943, 0.213, -5.307], "floor": "G"}, {"key": "WR1", "name": "Washroom (Bed-1)", "size": "7'-6\" x 12'-5\"", "area": 81.7, "pos": [6.287, 0.213, -5.772], "floor": "G"}, {"key": "PORCH", "name": "Car Porch", "size": "11'-3\" x 19'-9\"", "area": 222.2, "pos": [0.914, 0.213, 6.134], "floor": "G"}, {"key": "SF_BED4", "name": "Bed Room-4", "size": "13'-9\" x 16'-0\"", "area": 220.0, "pos": [-4.953, 3.566, 5.563], "floor": "S"}, {"key": "SF_BATH4", "name": "Bath (Bed-4)", "size": "5'-3\" x 7'-0\"", "area": 36.8, "pos": [-1.829, 3.566, 6.934], "floor": "S"}, {"key": "SF_DRS4", "name": "Dress (Bed-4)", "size": "5'-3\" x 8'-7 1/2\"", "area": 45.3, "pos": [-1.829, 3.566, 4.439], "floor": "S"}, {"key": "SF_FPASS", "name": "Passage 4'-0\" Wide", "size": "14'-6\" x 4'-0\"", "area": 58.0, "pos": [-4.839, 3.566, 2.286], "floor": "S"}, {"key": "SF_FKIT", "name": "Kitchen (Upper)", "size": "13'-9\" x 8'-1 1/2\"", "area": 111.7, "pos": [-4.953, 3.566, 0.324], "floor": "S"}, {"key": "SF_LAUN", "name": "Laundry + Store", "size": "13'-5\" x 7'-6 1/2\"", "area": 53.0, "pos": [-4.262, 3.566, -1.809], "floor": "S"}, {"key": "SF_HALL", "name": "Upper Lounge + Dining", "size": "irregular", "area": 289.8, "pos": [-0.202, 3.566, -0.759], "floor": "S"}, {"key": "SF_OTS", "name": "OTS (Open To Sky)", "size": "irregular", "area": 58.4, "pos": [-0.001, 3.566, -4.308], "floor": "S"}, {"key": "SF_BAL", "name": "Balcony", "size": "11'-3\" x 3'-9\"", "area": 42.2, "pos": [0.914, 3.566, 7.429], "floor": "S"}, {"key": "SF_FTV", "name": "Family TV Lounge", "size": "11'-3\" x 11'-10 1/2\"", "area": 133.6, "pos": [0.914, 3.566, 4.934], "floor": "S"}, {"key": "SF_MBR", "name": "Master Bedroom", "size": "15'-0\" x 16'-0\"", "area": 240.0, "pos": [5.144, 3.566, 5.563], "floor": "S"}, {"key": "SF_MDRS", "name": "Dressing (Master)", "size": "4'-10 1/2\" x 7'-7 1/2\"", "area": 37.2, "pos": [3.6, 3.566, 1.734], "floor": "S"}, {"key": "SF_MBATH", "name": "Bath (Master)", "size": "9'-9\" x 7'-7 1/2\"", "area": 74.3, "pos": [5.944, 3.566, 1.734], "floor": "S"}, {"key": "SF_BED3", "name": "Bed Room-3", "size": "15'-0\" x 15'-0\"", "area": 225.0, "pos": [5.144, 3.566, -1.943], "floor": "S"}, {"key": "SF_DRS3", "name": "Dressing (Bed-3)", "size": "7'-1 1/2\" x 9'-2 1/2\"", "area": 55.4, "pos": [4.011, 3.566, -5.541], "floor": "S"}, {"key": "SF_WR3", "name": "Washroom (Bed-3)", "size": "7'-6\" x 12'-5\"", "area": 81.7, "pos": [6.34, 3.566, -6.015], "floor": "S"}], "doors": [{"id": "D1", "w": "6'-0\"", "kind": "swing", "pos": [0.457, 2.469, 3.01], "floor": "G"}, {"id": "D2", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, 3.01], "floor": "G"}, {"id": "D4", "w": "2'-6\"", "kind": "pocket", "pos": [-2.743, 2.469, 5.182], "floor": "G"}, {"id": "D3", "w": "2'-0\"", "kind": "swing", "pos": [-2.286, 2.469, 5.81], "floor": "G"}, {"id": "D5", "w": "3'-6\"", "kind": "swing", "pos": [-7.163, 2.469, 2.286], "floor": "G"}, {"id": "D6", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, 1.619], "floor": "G"}, {"id": "D7", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 2.469, -0.972], "floor": "G"}, {"id": "D8", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 2.469, 2.362], "floor": "G"}, {"id": "D9", "w": "3'-6\"", "kind": "pocket", "pos": [2.743, 2.469, 3.658], "floor": "G"}, {"id": "D10", "w": "3'-6\"", "kind": "pocket", "pos": [3.543, 2.469, 3.01], "floor": "G"}, {"id": "D11", "w": "2'-0\"", "kind": "swing", "pos": [4.401, 2.469, 2.515], "floor": "G"}, {"id": "D12", "w": "2'-6\"", "kind": "pocket", "pos": [3.962, 2.469, 1.715], "floor": "G"}, {"id": "D13", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 2.469, -3.581], "floor": "G"}, {"id": "D14", "w": "2'-6\"", "kind": "slide", "pos": [3.315, 2.469, -4.286], "floor": "G"}, {"id": "D15", "w": "2'-0\"", "kind": "swing", "pos": [5.086, 2.469, -5.639], "floor": "G"}, {"id": "D16", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 5.822, 3.01], "floor": "S"}, {"id": "D17", "w": "2'-6\"", "kind": "pocket", "pos": [-2.743, 5.822, 5.182], "floor": "S"}, {"id": "D18", "w": "2'-0\"", "kind": "swing", "pos": [-2.286, 5.822, 5.81], "floor": "S"}, {"id": "D19", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 5.822, 1.619], "floor": "S"}, {"id": "D20", "w": "3'-6\"", "kind": "swing", "pos": [-3.429, 5.822, -0.972], "floor": "S"}, {"id": "A1", "w": "3'-0\"", "kind": "arch", "pos": [-0.229, 5.822, 3.01], "floor": "S"}, {"id": "D21", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 5.822, 3.696], "floor": "S"}, {"id": "D22", "w": "2'-6\"", "kind": "pocket", "pos": [3.391, 5.822, 3.01], "floor": "S"}, {"id": "D23", "w": "2'-0\"", "kind": "swing", "pos": [4.401, 5.822, 2.515], "floor": "S"}, {"id": "D24", "w": "3'-6\"", "kind": "swing", "pos": [2.743, 5.822, -3.581], "floor": "S"}, {"id": "D25", "w": "2'-6\"", "kind": "slide", "pos": [3.315, 5.822, -4.286], "floor": "S"}, {"id": "D26", "w": "2'-0\"", "kind": "swing", "pos": [5.086, 5.822, -5.639], "floor": "S"}], "views": {"Whole house": {"eye": [-14.021, 15.85, 19.507], "look": [0.0, 3.658, 0.61], "floor": "A"}, "Street view": {"eye": [-10.363, 1.676, 21.336], "look": [0.61, 4.572, 3.658], "floor": "A"}, "Ground floor": {"eye": [0.914, 16.916, 16.764], "look": [0.61, 0.0, 0.61], "floor": "G"}, "Lounge \u2192 entrance": {"eye": [0.61, 1.768, -1.981], "look": [1.067, 1.372, 3.048], "floor": "G"}, "Foyer \u2192 lobby": {"eye": [-0.305, 1.676, 2.316], "look": [4.572, 1.433, 2.438], "floor": "G"}, "Stair side": {"eye": [-1.981, 1.615, 0.762], "look": [2.438, 1.829, 1.372], "floor": "G"}, "Porch": {"eye": [0.914, 3.962, 11.887], "look": [0.914, 0.762, 3.048], "floor": "G"}, "From the road": {"eye": [-5.486, 2.134, 21.336], "look": [0.61, 0.305, 7.315], "floor": "G"}, "Second floor": {"eye": [0.914, 18.898, 15.85], "look": [0.61, 3.505, 0.61], "floor": "S"}, "Upper lounge": {"eye": [-2.286, 5.09, 2.591], "look": [2.134, 4.572, -0.914], "floor": "S"}, "TV lounge \u2192 balcony": {"eye": [0.914, 5.09, 3.292], "look": [0.914, 4.602, 8.534], "floor": "S"}, "Master bedroom": {"eye": [7.132, 5.151, 3.475], "look": [3.505, 4.298, 7.315], "floor": "S"}}, "ffl": 0.152, "ffl_s": 3.5052, "floors": {"G": "Ground floor", "S": "Second floor", "A": "Whole house"}}};
 const FT = 0.3048;
-const FURN = /^(KING|SIDE|STUDY|SHOWER|WC|BASIN|VANITY|WARDROBE|SHELVES|COUNTER|FRIDGE|DINING|CHAIRS|TV|SOFA|COFFEE|ARMCHAIR|CENTRE|car_|wheel)/;
+const FURN = /^(SF_)?(KING|SIDE|STUDY|SHOWER|WC|BASIN|VANITY|WARDROBE|SHELVES|COUNTER|FRIDGE|DINING|CHAIRS?|TV|SOFA|COFFEE|ARMCHAIR|CENTRE|LOUNGE|WASHER|DRYER|SINK|car_|wheel)/;
 
 const stage = document.getElementById('stage');
 const canvas = document.getElementById('c');
@@ -150,7 +158,7 @@ scene.add(sun);
 const clip = new THREE.Plane(new THREE.Vector3(0, -1, 0), 100);
 const loader = new THREE.GLTFLoader();
 const cache = {};
-let model = null, version = 'L', floors = [];
+let model = null, version = 'L', floors = [], floorMode = 'A';
 
 function themeColors() {
   const dark = matchMedia('(prefers-color-scheme: dark)').matches && document.documentElement.dataset.theme !== 'light'
@@ -257,16 +265,17 @@ function prepare(root) {
     const t = TEX[name];
     if (t) o.geometry = addUVs(o.geometry, t.userData.metres);
     o.material = styled(o.material);
-    o.castShadow = !/^(road|ground|lawn|yard|floor_)/.test(o.name) && name !== 'glass';
+    o.castShadow = !/^(road|ground|lawn|yard|floor_|SF_floor_|RF_terrace)/.test(o.name) && name !== 'glass';
+    o.userData.lvl = /^SF_/.test(o.name) ? 'S' : /^RF_/.test(o.name) ? 'R' : 'G';
     o.receiveShadow = name !== 'glass';
-    if (/^floor_/.test(o.name)) floors.push(o);
+    if (/^(SF_)?floor_/.test(o.name)) floors.push(o);
     o.userData.furn = FURN.test(o.name);
     if (o.name === 'GATE') gate = o;
     if (!/^(road|ground|lawn|stone|leaf|trunk|Ico|Cylinder|car_|wheel)/.test(o.name) && name !== 'glass' && name !== 'leaf') edgeList.push(o);
   });
   edgeList.forEach(o => {
     const e = new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry, 28), edgeMat);
-    e.userData.furn = o.userData.furn; e.raycast = () => {};
+    e.userData.furn = o.userData.furn; e.userData.lvl = o.userData.lvl; e.raycast = () => {};
     o.add(e);
   });
   if (gate) { gate.userData.x0 = gate.position.x; setGate(gateOpen, true); }
@@ -294,13 +303,13 @@ function load(v) {
     if (model) scene.remove(model);
     model = gltf.scene;
     if (!model.userData.prepared) { prepare(model); model.userData.prepared = true; }
-    else { floors = []; gate = null; model.traverse(o => { if (o.isMesh && /^floor_/.test(o.name)) floors.push(o); if (o.name === 'GATE') gate = o; }); setGate(gateOpen, true); }
+    else { floors = []; gate = null; model.traverse(o => { if (o.isMesh && /^(SF_)?floor_/.test(o.name)) floors.push(o); if (o.name === 'GATE') gate = o; }); setGate(gateOpen, true); }
     scene.add(model); redraw(true);
     applyToggles(); st.hidden = true; buildLabels(); renderFacts();
   };
   if (cache[v]) return done(cache[v]);
-  loader.load(`DH-GF-${v}.glb`, g => { cache[v] = g; done(g); }, undefined,
-    () => { st.textContent = 'The 3D model could not load. Check that DH-GF-' + v + '.glb sits next to this page.'; });
+  loader.load(`DH-${v}.glb`, g => { cache[v] = g; done(g); }, undefined,
+    () => { st.textContent = 'The 3D model could not load. Check that DH-' + v + '.glb sits next to this page.'; });
 }
 
 // --- viewpoints
@@ -308,6 +317,7 @@ const viewsEl = document.getElementById('views');
 let anim = null;
 function goTo(name) {
   const vw = INFO[version].views[name];
+  if (vw.floor && vw.floor !== floorMode) setFloor(vw.floor);
   [...viewsEl.children].forEach(b => b.setAttribute('aria-pressed', b.dataset.v === name));
   const p0 = camera.position.clone(), t0 = controls.target.clone();
   const p1 = new THREE.Vector3(...vw.eye), t1 = new THREE.Vector3(...vw.look);
@@ -333,13 +343,13 @@ let labels = [];
 function buildLabels() {
   labelsEl.innerHTML = ''; labels = [];
   INFO[version].rooms.forEach(r => {
-    if (r.key === 'OTS' || r.key === 'PORCH') return;
+    if (/^(SF_)?(OTS|PORCH|VOID)$/.test(r.key)) return;
     const d = document.createElement('div'); d.className = 'lbl'; d.textContent = r.name; labelsEl.appendChild(d);
-    labels.push({ el: d, p: new THREE.Vector3(...r.pos).add(new THREE.Vector3(0, 0.9, 0)), kind: 'room' });
+    labels.push({ el: d, p: new THREE.Vector3(...r.pos).add(new THREE.Vector3(0, 0.9, 0)), kind: 'room', floor: r.floor || 'G' });
   });
   INFO[version].doors.forEach(r => {
     const d = document.createElement('div'); d.className = 'lbl door'; d.textContent = r.id + ' ' + r.w; labelsEl.appendChild(d);
-    labels.push({ el: d, p: new THREE.Vector3(...r.pos), kind: 'door' });
+    labels.push({ el: d, p: new THREE.Vector3(...r.pos), kind: 'door', floor: r.floor || 'G' });
   });
   applyToggles();
 }
@@ -361,12 +371,14 @@ const tL = document.getElementById('tLabels'), tD = document.getElementById('tDo
 const cutH = document.getElementById('cutH'), cutOut = document.getElementById('cutOut');
 function fmt(ft) { const t = Math.round(ft * 12); return `${Math.floor(t / 12)}'-${t % 12}"`; }
 function applyToggles() {
-  labels.forEach(l => l.el.hidden = l.kind === 'room' ? !tL.checked : !tD.checked); redraw(false);
-  if (model) model.traverse(o => { if ((o.isMesh || o.isLineSegments) && o.userData.furn) o.visible = tF.checked; });
+  labels.forEach(l => l.el.hidden = l.floor !== floorMode || (l.kind === 'room' ? !tL.checked : !tD.checked)); redraw(false);
+  const showLvl = { G: true, S: floorMode !== 'G', R: floorMode === 'A' };
+  if (model) model.traverse(o => { if (o.isMesh || o.isLineSegments) o.visible = showLvl[o.userData.lvl || 'G'] && (!o.userData.furn || tF.checked); });
   const hft = parseFloat(cutH.value);
-  clip.constant = (INFO[version].ffl) + hft * FT;
+  clip.constant = (floorMode === 'S' ? INFO[version].ffl_s : INFO[version].ffl) + hft * FT;
   cutOut.value = fmt(hft);
-  if (hft >= 12.5) clip.constant = 100;
+  if (hft >= 12.5 || floorMode === 'A') clip.constant = 100;
+  cutH.disabled = floorMode === 'A'; cutH.parentElement.style.opacity = floorMode === 'A' ? .45 : 1;
   redraw(true);
 }
 [tL, tD, tF].forEach(x => x.addEventListener('change', applyToggles));
@@ -381,9 +393,10 @@ canvas.addEventListener('pointerup', e => {
   const r = canvas.getBoundingClientRect();
   ndc.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
   ray.setFromCamera(ndc, camera);
-  const hit = ray.intersectObjects(floors, false)[0];
+  if (floorMode === 'A') return;
+  const hit = ray.intersectObjects(floors.filter(f => f.visible && f.userData.lvl === floorMode), false)[0];
   if (!hit) return;
-  const key = hit.object.name.replace(/^floor_/, '').replace(/\.\d+$/, '');
+  const key = hit.object.name.replace(/floor_/, '').replace(/\.\d+$/, '');
   const room = INFO[version].rooms.find(x => x.key === key);
   if (room) showCard(room);
 });
@@ -399,7 +412,8 @@ document.getElementById('cardClose').onclick = () => card.hidden = true;
 function renderFacts() {
   const i = INFO[version];
   document.getElementById('facts').textContent =
-    `${i.stair} · ${i.risers} risers @ ${i.riser}" · landing +${i.landing} · walls cut at the slider height`;
+    `${i.stair} (stacked to the roof) · ${i.risers} risers @ ${i.riser}" · landing +${i.landing} · ` +
+    (floorMode === 'A' ? 'whole house with roof & mumty' : `${INFO[version].floors[floorMode]} walls cut at the slider height`);
 }
 
 // --- option switch
@@ -409,6 +423,13 @@ function setVersion(v) {
   document.getElementById('optU').setAttribute('aria-pressed', v === 'U');
   buildViews(); load(v);
 }
+const floorSeg = document.getElementById('floorSeg');
+function setFloor(f) {
+  floorMode = f;
+  [...floorSeg.children].forEach(b => b.setAttribute('aria-pressed', b.dataset.f === f));
+  card.hidden = true; applyToggles(); renderFacts();
+}
+[...floorSeg.children].forEach(b => b.onclick = () => setFloor(b.dataset.f));
 document.getElementById('optL').onclick = () => setVersion('L');
 document.getElementById('optU').onclick = () => setVersion('U');
 
@@ -426,9 +447,9 @@ function tick(now) {
   if (dirty) { renderer.render(scene, camera); placeLabels(); dirty = false; }
   requestAnimationFrame(tick);
 }
-const first = INFO.L.views['Aerial'];
+const first = INFO.L.views['Whole house'];
 camera.position.set(...first.eye); controls.target.set(...first.look);
-resize(); setVersion('L'); goTo('Aerial'); requestAnimationFrame(tick);
+resize(); setVersion('L'); goTo('Whole house'); requestAnimationFrame(tick);
 </script>
 
 </body>

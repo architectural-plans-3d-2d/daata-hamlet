@@ -1,13 +1,14 @@
 # Daata Hamlet Residence - 3D viewer
 
-Interactive 3D model of the ground floor (REV-04), with both stair options (L and U).
+Interactive 3D model of the house: ground floor (REV-04), second floor (REV-01), roof and mumty,
+with both stair options (L and U).
 Works on phones: drag to turn, pinch to zoom, tap a room for its size and area.
 
-## Put it online with GitHub Pages
-1. Create a new public repository on github.com, for example `daata-hamlet-3d`.
-2. Upload the three files in this folder: `index.html`, `DH-GF-L.glb`, `DH-GF-U.glb`
-   (Add file > Upload files > Commit).
-3. Settings > Pages > Source: "Deploy from a branch", branch `main`, folder `/ (root)` > Save.
-4. After a minute the viewer is live at `https://<your-username>.github.io/daata-hamlet-3d/`.
+- **Floor switch:** Ground / Second / Whole house. In Ground and Second, the walls are cut at the slider height.
+- **Viewpoints:** whole house, street view, the ground-floor rooms, and the second-floor lounge, TV lounge + balcony and master bedroom.
+- **Open/Close car gate:** slides the 11'-3" gate into its wall pocket.
 
-To update the model later, regenerate the .glb files (`DH_STAIR=L python build_3d.py blend`) and upload them again.
+Files: `index.html`, `DH-L.glb` (L stair), `DH-U.glb` (U stair).
+Live at https://architectural-plans-3d-2d.github.io/daata-hamlet/
+
+To update the model, regenerate the .glb files (`DH_STAIR=L python build_3d.py blend`, then `U`) and push them.
