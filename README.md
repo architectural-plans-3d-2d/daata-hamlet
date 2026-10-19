@@ -1,6 +1,6 @@
 # Daata Hamlet Residence - 3D viewer
 
-Interactive 3D model of the house: ground floor (REV-04), second floor (REV-01), roof and mumty,
+Interactive 3D model of the house: ground floor (REV-04), second floor (REV-02, classic tiled-gable front), roof and mumty,
 with both stair options (L and U).
 Works on phones: drag to turn, pinch to zoom, tap a room for its size and area.
 
