@@ -1,6 +1,6 @@
 # Daata Hamlet Residence - 3D viewer
 
-Interactive 3D model of the house: ground floor (REV-04), second floor (REV-04: classic sham tiled gables top + lower tiled roof with gables at the floor line), roof and mumty,
+Interactive 3D model of the house: ground floor (REV-04), second floor (REV-06: separate balconies with canopies, east lower roof, crown gable over the mumty link), roof and mumty,
 with both stair options (L and U).
 Works on phones: drag to turn, pinch to zoom, tap a room for its size and area.
 
