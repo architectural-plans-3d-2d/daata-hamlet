@@ -124,6 +124,10 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 .app { height: 100vh; height: 100dvh; }
 .floorbar { display: flex; gap: 8px; align-items: center; }
+.lookrow { display: flex; flex-direction: column; gap: 6px; }
+.lookrow .lab { font: 600 .72rem var(--font-body); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.chip .sw { display: inline-flex; margin-right: 8px; border-radius: 4px; overflow: hidden; border: 1px solid var(--line); }
+.chip .sw i { display: block; width: 9px; height: 16px; }
 .floorbar .seg { flex: 1; display: flex; }
 .floorbar .seg button { flex: 1; }
 @media (max-width: 640px) { .brand p { font-size: .66rem; } .seg button { padding: 6px 10px; } }
@@ -135,7 +139,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   <header>
     <div class="brand">
       <h1>Daata Hamlet Residence</h1>
-      <p>Ground + second floor · GF REV-04 · SF REV-08</p>
+      <p>Ground + second floor · GF REV-04 · SF REV-09</p>
     </div>
     <div class="seg" role="group" aria-label="Stair option">
       <button id="optL" aria-pressed="true">L stair</button>
@@ -191,6 +195,11 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
         <button class="pill" id="gateBtn" aria-pressed="false"><span class="dot" aria-hidden="true"></span>Car gate</button>
       </div>
       <p class="facts" id="facts"></p>
+    </div>
+    <div class="lookrow">
+      <span class="lab" id="lookLab">House look</span>
+      <div class="views" id="looks" role="group" aria-labelledby="lookLab"></div>
+      <p class="facts" id="lookNote"></p>
     </div>
     <div class="floorbar">
       <div class="seg" id="floorSeg" role="group" aria-label="Floor">
@@ -320,8 +329,82 @@ const TEX = {
     noise(g, 3000, '#6e4220', '#c48a55', .35); }, 256, 1.2),
   counter: tex((g, s) => { g.fillStyle = '#26292d'; g.fillRect(0, 0, s, s); noise(g, 5000, '#121417', '#6b7077', .6); }, 256, 0.8),
 };
+// ---------- REV-09 looks: colour scheme + canopy family (geometry tagged __s<look> in the model)
+function wallTex(c, rep = 2) { return tex((g, s) => { g.fillStyle = c[0]; g.fillRect(0, 0, s, s); noise(g, 2500, c[1], c[2], .35); }, 256, rep); }
+function roofTex(kind) {
+  if (kind === 'barrel') return tex((g, s) => {            // terracotta barrel (Spanish) tiles: 8 rows x 8 rolls
+    g.fillStyle = '#6e2f18'; g.fillRect(0, 0, s, s);
+    for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+      const x = c * 32, y = r * 32, l = 38 + Math.random() * 9;
+      const gr = g.createLinearGradient(x, 0, x + 32, 0);
+      gr.addColorStop(0, `hsl(14,42%,${l - 16}%)`); gr.addColorStop(.45, `hsl(17,46%,${l + 2}%)`); gr.addColorStop(1, `hsl(13,40%,${l - 18}%)`);
+      g.fillStyle = gr; g.fillRect(x + 1, y + 1, 30, 29); g.fillStyle = 'rgba(40,10,0,.45)'; g.fillRect(x, y + 28, 32, 4); }
+    noise(g, 2500, '#5a2412', '#d98a5e', .3); }, 256, 2.4);
+  const P = kind === 'zinc' ? [208, 9, 30, 6, '#20262d'] : [20, 32, 17, 6, '#1d120c'];   // hue, sat, light, spread, joint
+  return tex((g, s) => { g.fillStyle = P[4]; g.fillRect(0, 0, s, s);
+    const rows = kind === 'zinc' ? 10 : 8, cols = kind === 'zinc' ? 8 : 6, h = s / rows;
+    for (let r = 0; r < rows; r++) { for (let c = 0; c < cols; c++) { const x = c * s / cols + (r % 2) * s / cols / 2;
+        g.fillStyle = `hsl(${P[0]},${P[1] + Math.random() * 5}%,${P[2] + Math.random() * P[3]}%)`; g.fillRect(x + 1, r * h + 1, s / cols - 2, h - 4);
+        g.fillRect(x + 1 - s, r * h + 1, s / cols - 2, h - 4); }
+      g.fillStyle = 'rgba(0,0,0,.4)'; g.fillRect(0, r * h + h - 3, s, 3); g.fillStyle = 'rgba(255,255,255,.07)'; g.fillRect(0, r * h + 1, s, 2); }
+    noise(g, 3000, '#000000', '#ffffff', .12); }, 256, 2.4);
+}
+function stoneTex(kind, c) {
+  if (kind === 'rubble') return tex((g, s) => { g.fillStyle = '#8a7a66'; g.fillRect(0, 0, s, s);
+    for (let i = 0; i < 70; i++) { const x = Math.random() * s, y = Math.random() * s, rx = 14 + Math.random() * 18, ry = 9 + Math.random() * 10;
+      g.fillStyle = `hsl(${28 + Math.random() * 10},${18 + Math.random() * 14}%,${48 + Math.random() * 16}%)`;
+      for (const dx of [-s, 0, s]) for (const dy of [-s, 0, s]) { g.beginPath(); g.ellipse(x + dx, y + dy, rx, ry, Math.random(), 0, 7); g.fill(); } }
+    noise(g, 3000, '#6f604f', '#e2d3bd', .35); }, 256, 1.6);
+  return tex((g, s) => { g.fillStyle = c; g.fillRect(0, 0, s, s); noise(g, 5000, '#00000022', '#ffffff', .25);   // ashlar blocks
+    g.fillStyle = 'rgba(60,50,40,.45)'; for (let r = 0; r < 4; r++) { g.fillRect(0, r * 64, s, 3);
+      for (let k = 0; k < 2; k++) g.fillRect(k * 128 + (r % 2) * 64, r * 64, 3, 64); } }, 256, 2.0);
+}
+TEX.stonebase = stoneTex('ashlar', '#c4c2bc');
+TEX.quoin = tex((g, s) => { g.fillStyle = '#d8d6d0'; g.fillRect(0, 0, s, s); noise(g, 3000, '#b9b6ae', '#f4f2ec', .35); }, 256, 1.5);
+const LOOKS = {
+  '0': { name: 'Current', note: 'Cream render, charcoal tiles, tiled canopies on cream piers (REV-08).',
+         wall: null, roof: 'slate', roofTint: '#8c8c8c', trim: '#fbfaf6', winframe: '#f7f7f4', door: '#7a4a24', sw: ['#ead6aa', '#33373c', '#fbfaf6'] },
+  A: { name: 'A · French Villa', note: 'Warm cream, charcoal slate, white trim. Tiled canopies on white scrolled brackets (no piers), charcoal louvred shutters.',
+       wall: ['#f1e0bb', '#e3cfa3', '#faefd6'], roof: 'slate', roofTint: '#8c8c8c', trim: '#ffffff', winframe: '#ffffff', door: '#2f3a45', shutter: '#38434e',
+       sw: ['#f1e0bb', '#33373c', '#38434e'] },
+  B: { name: 'B · Parisian Iron', note: 'Pale limestone, zinc-grey roof, grey stone base + quoins. Black iron-and-glass canopies, black windows, ridge cresting.',
+       wall: ['#ece9e2', '#dcd8ce', '#f7f5f0'], roof: 'zinc', roofTint: '#8f8f8f', trim: '#e4e2dc', winframe: '#202226', door: '#202226',
+       stone: ['ashlar', '#c4c2bc'], quoin: '#d9d7d1', sw: ['#ece9e2', '#4f5761', '#202226'] },
+  C: { name: 'C · Copper Manor', note: 'Sandstone beige, deep brown tiles, honey-stone base + quoins. Copper bell-curve canopies on slim stone columns, bronze windows.',
+       wall: ['#d9b98a', '#c6a372', '#e6cda2'], roof: 'brown', roofTint: '#c8c8c8', trim: '#f3e8d2', winframe: '#4a3a2c', door: '#5a3b24',
+       stone: ['ashlar', '#c39c63'], quoin: '#cfa86c', copper: '#8a5532', sw: ['#e0c592', '#4e3426', '#b8733f'] },
+  D: { name: 'D · Spanish Hacienda', note: 'White-wash, terracotta barrel tiles, rubble-stone base. Arched tiled hoods on cream piers, dark timber corbels.',
+       wall: ['#f6f2ea', '#e9e3d7', '#ffffff'], roof: 'barrel', roofTint: '#bdbdbd', trim: '#ffffff', winframe: '#3b2a1c', door: '#6b3e1f',
+       stone: ['rubble'], timber: '#4a2f1d', sw: ['#f6f2ea', '#b4562f', '#3b2a1c'] },
+};
+const lookTexCache = {};
+function lookTex(k) {
+  if (lookTexCache[k]) return lookTexCache[k];
+  const L = LOOKS[k];
+  return (lookTexCache[k] = { wall: L.wall ? wallTex(L.wall) : TEX.wall, boundary: L.wall ? wallTex([L.wall[2], L.wall[0], '#ffffff']) : TEX.boundary,
+    rooftile: L.roof === 'slate' ? TEX.rooftile : roofTex(L.roof), stonebase: L.stone ? stoneTex(L.stone[0], L.stone[1]) : TEX.stonebase });
+}
+const lin = h => new THREE.Color(h).convertSRGBToLinear();
+let look = '0';
+try { const q = new URLSearchParams(location.search).get('look'); if (q && LOOKS[q.toUpperCase()]) look = q.toUpperCase(); } catch (e) {}
+function applyLook() {
+  const L = LOOKS[look], T = lookTex(look), m = matCache;
+  for (const k of ['wall', 'boundary', 'rooftile', 'stonebase']) if (m[k]) { m[k].map = T[k]; m[k].needsUpdate = true; }
+  if (m.rooftile) m.rooftile.color = new THREE.Color(L.roofTint);
+  for (const k of ['trim', 'winframe', 'door', 'shutter', 'copper', 'timber', 'quoin']) if (m[k] && L[k]) m[k].color = lin(L[k]);
+  if (m.quoin && L.quoin) m.quoin.color = new THREE.Color(L.quoin).lerp(new THREE.Color('#ffffff'), .25);
+  document.getElementById('lookNote').textContent = L.note;
+  [...document.getElementById('looks').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.k === look));
+}
+function setLook(k) { look = k; applyLook(); applyToggles(); }
+window.setLook = setLook;
+(() => { const el = document.getElementById('looks');
+  Object.entries(LOOKS).forEach(([k, L]) => { const b = document.createElement('button'); b.className = 'chip'; b.dataset.k = k;
+    b.innerHTML = '<span class="sw" aria-hidden="true">' + L.sw.map(c => `<i style="background:${c}"></i>`).join('') + '</span>' + L.name;
+    b.setAttribute('aria-pressed', k === look); b.onclick = () => setLook(k); el.appendChild(b); }); })();
 const ROUGH = { wood: .55, tile: .25, wet: .2, stone: .9, plinth: .85, paver: .85, grass: 1, ground: 1, road: .9, wall: .9,
-                boundary: .9, stair: .35, counter: .2, glass: .05, door: .5, gate: .4, frame: .4, travertine: .55, teak: .6, charcoal: .6, rooftile: .7, trim: .5, winframe: .35, iron: .45, flower: .9 };
+                boundary: .9, stair: .35, counter: .2, glass: .05, door: .5, gate: .4, frame: .4, travertine: .55, teak: .6, charcoal: .6, rooftile: .7, trim: .5, winframe: .35, iron: .45, flower: .9,
+                stonebase: .9, quoin: .85, copper: .35, timber: .6, shutter: .5 };
 
 // planar UVs picked per triangle from its dominant normal (the export has no UVs)
 function addUVs(geo, metres) {
@@ -352,7 +435,7 @@ function styled(m) {
   if (matCache[key]) return matCache[key];
   const t = TEX[key];
   const out = new THREE.MeshStandardMaterial({ name: key, color: t ? 0xffffff : m.color, map: t || null,
-    roughness: ROUGH[key] ?? 0.7, metalness: key === 'gate' || key === 'frame' || key === 'car' ? 0.6 : key === 'iron' ? 0.4 : 0,
+    roughness: ROUGH[key] ?? 0.7, metalness: key === 'gate' || key === 'frame' || key === 'car' ? 0.6 : key === 'iron' ? 0.4 : key === 'copper' ? 0.55 : 0,
     envMapIntensity: 0.9, side: THREE.DoubleSide });
   if (key === 'glass') Object.assign(out, { transparent: true, opacity: 0.28, depthWrite: false, color: new THREE.Color(0x9cc7e6), roughness: .05, metalness: .1 });
   if (key === 'wallcut') out.color = new THREE.Color(0x3b3b3b);
@@ -395,12 +478,13 @@ function prepare(root) {
     o.receiveShadow = name !== 'glass';
     if (/^(SF_)?floor_/.test(o.name)) floors.push(o);
     o.userData.furn = FURN.test(o.name);
+    const lm_ = o.name.match(/__s([0A-D]+)/); o.userData.look = lm_ ? lm_[1] : null;
     if (o.name === 'GATE') gate = o;
     if (!/^(road|ground|lawn|stone|TREE|car_)/.test(o.name) && !/^(glass|leaf|flower|iron)$/.test(name)) edgeList.push(o);
   });
   edgeList.forEach(o => {
     const e = new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry, 28), edgeMat);
-    e.userData.furn = o.userData.furn; e.userData.lvl = o.userData.lvl; e.raycast = () => {};
+    e.userData.furn = o.userData.furn; e.userData.lvl = o.userData.lvl; e.userData.look = o.userData.look; e.raycast = () => {};
     o.add(e);
   });
   if (gate) { gate.userData.x0 = gate.position.x; setGate(gateOpen, true); }
@@ -430,7 +514,7 @@ function load(v) {
     if (!model.userData.prepared) { prepare(model); model.userData.prepared = true; }
     else { floors = []; gate = null; model.traverse(o => { if (o.isMesh && /^(SF_)?floor_/.test(o.name)) floors.push(o); if (o.name === 'GATE') gate = o; }); setGate(gateOpen, true); }
     scene.add(model); redraw(true);
-    applyToggles(); st.hidden = true; buildLabels(); renderFacts();
+    applyLook(); applyToggles(); st.hidden = true; buildLabels(); renderFacts();
   };
   if (cache[v]) return done(cache[v]);
   loader.load(`DH-${v}.glb`, g => { cache[v] = g; done(g); },
@@ -509,7 +593,7 @@ function fmt(ft) { const t = Math.round(ft * 12); return `${Math.floor(t / 12)}'
 function applyToggles() {
   labels.forEach(l => l.el.hidden = l.floor !== floorMode || (l.kind === 'room' ? !state.labels : !state.doors)); redraw(false);
   const showLvl = { G: true, S: floorMode !== 'G', R: floorMode === 'A' };
-  if (model) model.traverse(o => { if (o.isMesh || o.isLineSegments) o.visible = showLvl[o.userData.lvl || 'G'] && (!o.userData.furn || state.furn); });
+  if (model) model.traverse(o => { if (o.isMesh || o.isLineSegments) o.visible = showLvl[o.userData.lvl || 'G'] && (!o.userData.furn || state.furn) && (!o.userData.look || o.userData.look.includes(look)); });
   const hft = parseFloat(cutH.value);
   clip.constant = (floorMode === 'S' ? INFO[version].ffl_s : INFO[version].ffl) + hft * FT;
   cutOut.value = fmt(hft);
